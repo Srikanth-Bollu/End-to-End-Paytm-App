@@ -1,7 +1,7 @@
 // backend/db.js
 const mongoose = require('mongoose');
 
-mongoose.connect("mongodb+srv://Srikanth:Srikanth04*@cluster0.tnvf745.mongodb.net/paytm")
+mongoose.connect("mongodb+srv://name:password@cluster0.tnvf745.mongodb.net/paytm")
 
 // Create a Schema for Users
 const userSchema = new mongoose.Schema({
