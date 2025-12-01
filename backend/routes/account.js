@@ -1,8 +1,8 @@
 // backend/routes/account.js
-const express = require('express');
-const { authMiddleware } = require('../middleware');
-const { Account } = require('../db');
-const { default: mongoose } = require('mongoose');
+import express from 'express';
+import { authMiddleware } from '../middleware.js';
+import { Account } from '../db.js';
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
@@ -52,4 +52,4 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

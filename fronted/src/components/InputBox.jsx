@@ -1,9 +1,15 @@
-
-export function InputBox({label, placeholder, onChange}) {
-    return <div>
-      <div className="text-sm font-medium text-left py-2">
+export function InputBox({ label, placeholder, onChange, type = "text" }) {
+  return (
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
         {label}
-      </div>
-      <input onChange={onChange} placeholder={placeholder} className="w-full px-2 py-1 border rounded border-slate-200" />
+      </label>
+      <input
+        onChange={onChange}
+        placeholder={placeholder}
+        type={type}
+        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 bg-gray-50"
+      />
     </div>
+  );
 }

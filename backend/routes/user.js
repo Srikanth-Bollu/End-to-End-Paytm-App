@@ -1,18 +1,18 @@
 // backend/routes/user.js
-const express = require('express');
+import express from 'express';
+import zod from "zod";
+import { User, Account } from "../db.js";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../config.js";
+import { authMiddleware } from "../middleware.js";
 
 const router = express.Router();
-const zod = require("zod");
-const { User, Account } = require("../db");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config");
-const  { authMiddleware } = require("../middleware");
 
 const signupBody = zod.object({
     username: zod.string().email(),
-	firstName: zod.string(),
-	lastName: zod.string(),
-	password: zod.string()
+    firstName: zod.string(),
+    lastName: zod.string(),
+    password: zod.string()
 })
 
 router.post("/signup", async (req, res) => {
@@ -59,7 +59,7 @@ router.post("/signup", async (req, res) => {
 
 const signinBody = zod.object({
     username: zod.string().email(),
-	password: zod.string()
+    password: zod.string()
 })
 
 router.post("/signin", async (req, res) => {
@@ -79,21 +79,43 @@ router.post("/signin", async (req, res) => {
         const token = jwt.sign({
             userId: user._id
         }, JWT_SECRET);
-  
+
         res.json({
             token: token
         })
         return;
     }
 
-    
+
     res.status(411).json({
         message: "Error while logging in"
     })
 })
 
+// Get current user info
+router.get("/me", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+        res.json({
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            _id: user._id
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error fetching user info"
+        });
+    }
+});
+
 const updateBody = zod.object({
-	password: zod.string().optional(),
+    password: zod.string().optional(),
     firstName: zod.string().optional(),
     lastName: zod.string().optional(),
 })
@@ -140,4 +162,5 @@ router.get("/bulk", async (req, res) => {
     })
 })
 
-module.exports = router;
+
+export default router;
